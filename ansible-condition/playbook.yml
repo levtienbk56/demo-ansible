@@ -1,0 +1,21 @@
+- name: Test install nginx
+  hosts: all
+  become: true
+  tasks:
+    - name: "show ansible facts: "
+      debug:
+        var: ansible_facts['distribution']
+    - name: Install Nginx on Ubuntu
+      apt: name=nginx update_cache=yes state=latest force_apt_get=yes
+      when: ansible_facts['distribution'] == "Ubuntu"
+    - name: install nginx on CentOS
+      block:
+      - name: install EPEL repo on CentOS
+        yum: name=epel-release state=present
+      - name: Install Nginx on Centos
+        yum: name=nginx update_cache=yes state=latest
+        register: err
+      when: ansible_facts['distribution'] == "CentOS"
+    - name: start server nginx
+      service: name=nginx state=started enabled=yes
+

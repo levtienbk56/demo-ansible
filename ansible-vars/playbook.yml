@@ -1,0 +1,4 @@
+- hosts: webserver
+  gather_facts: false
+  tasks:
+    - ping:

@@ -1,0 +1,3 @@
+[webserver1]
+webUbuntu ansible_host=10.32.1.165 ansible_user=ubuntu
+webCentos ansible_host=10.32.1.55 ansible_user=centos

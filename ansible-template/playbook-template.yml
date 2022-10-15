@@ -1,0 +1,15 @@
+- name: Copy test template
+  hosts: Ubuntu
+  become: true
+  gather_facts: false
+    
+  tasks:
+    - name: create target directory
+      file: path=./nginx state=directory mode=0755
+    - name: Copy template to host
+      template:
+        src: ./templates/reverse_proxy.conf
+        dest: /etc/nginx/nginx.conf
+
+  vars_files:
+    - ./vars/backend-cluster.yml
