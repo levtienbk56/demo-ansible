@@ -17,12 +17,11 @@
 
     - name: install nginx on CentOS
       block:
-      - name: install EPEL repo on CentOS
-        yum: name=epel-release state=present
-      - name: Install Nginx on Centos
-        yum: name=nginx update_cache=yes state=latest
-        register: err
+        - name: Install Nginx on Centos
+          yum: name=nginx update_cache=yes state=absent
+          register: centoserr1
+        - name: "Block show err on centos"
+          debug:
+            var: centoserr1
       when: ansible_facts['distribution'] == "CentOS"
-    - name: start server nginx
-      service: name=nginx state=started enabled=yes
 
