@@ -1,0 +1,27 @@
+- name: Test install nginx
+  hosts: all
+  become: true
+  tasks:
+    - name: "show ansible facts: "
+      debug:
+        var: ansible_facts['distribution']
+    - name: Uninstall Nginx on Ubuntu by apt-get command
+      block:
+        - name: uninstall nginx on ubuntu
+          shell: apt-get purge nginx nginx-common -y
+          register: ubuntuerr1
+        - name: Debug ubuntu
+          debug:
+            var: ubuntuerr1
+      when: ansible_facts['distribution'] == "Ubuntu"
+
+    - name: install nginx on CentOS
+      block:
+        - name: Install Nginx on Centos
+          yum: name=nginx update_cache=yes state=absent
+          register: centoserr1
+        - name: "Block show err on centos"
+          debug:
+            var: centoserr1
+      when: ansible_facts['distribution'] == "CentOS"
+
