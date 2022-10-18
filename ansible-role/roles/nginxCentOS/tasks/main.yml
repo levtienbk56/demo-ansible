@@ -1,0 +1,4 @@
+- name: install EPEL repo on CentOS
+  yum: name=epel-release state=present
+- name: install NGINX CentOS
+  yum: name=nginx update_cache=yes state=present
