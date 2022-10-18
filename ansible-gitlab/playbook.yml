@@ -1,0 +1,43 @@
+- name: "Test gitlab CD"
+  hosts: webserver
+  become: true
+  vars:
+    project_path: /var/www/nodejs
+  vars_files:
+    - token.yml
+  pre_tasks:
+    - name: Apt update
+      apt:
+        update_cache: yes
+  roles:
+      - geerlingguy.nodejs
+
+  tasks:
+    - name: "install PM2"
+      npm:
+        name: pm2
+        global: yes
+
+    - name: Delete old pm2 process
+      command: pm2 delete nodejs
+      ignore_errors: yes
+    - name: Remove folder
+      file:
+        path: "{{ project_path }}"
+        state: absent
+    - name: Create new folde
+      file:
+        path: "{{ project_path }}"
+        mode: 0755
+        recurse: yes
+        state: directory
+    - name: Clone Project A git repo
+      git:
+        repo: 'https://{{ gitlab_username }}:{{ gitlab_deploy_token }}@jennydaojp.com/tien/nodejs1.git'
+        dest: "{{ project_path }}"
+    - name: Install nodejs lib
+      npm:
+        path: "{{ project_path }}"
+        state: present
+    - name: Run PM2 app.js
+      command: pm2 start "{{ project_path }}/app.js" --name nodejs

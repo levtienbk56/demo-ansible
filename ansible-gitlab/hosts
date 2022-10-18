@@ -1,0 +1,2 @@
+[webserver]
+webUbuntu ansible_host=10.32.1.165 ansible_user=ubuntu
